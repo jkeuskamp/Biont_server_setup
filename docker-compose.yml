@@ -5,8 +5,8 @@ services:
     restart: always
     image: rocker/tidyverse
     container_name: rstudio
-    expose:
-      - "8787"
+    port:
+      - "8787:8787"
     environment:
       - USER=test
       - PASSWORD=test
@@ -15,10 +15,8 @@ services:
     restart: always
     image: rocker/shiny
     container_name: shiny
-    expose:
-      - "3838"
-    environment:
-      - VIRTUAL_PORT=8383
+    port:
+      - "3838:3838"
 
 volumes:
   data-volume:
