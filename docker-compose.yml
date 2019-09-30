@@ -1,0 +1,24 @@
+version: "3.3"
+
+services:
+ tidyverse:
+    restart: always
+    image: rocker/tidyverse
+    container_name: rstudio
+    expose:
+      - "8787"
+    environment:
+      - USER=test
+      - PASSWORD=test
+
+ shiny:
+    restart: always
+    image: rocker/shiny
+    container_name: shiny
+    expose:
+      - "3838"
+    environment:
+      - VIRTUAL_PORT=8383
+
+volumes:
+  data-volume:
