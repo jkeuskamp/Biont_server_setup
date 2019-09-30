@@ -28,7 +28,7 @@ While the server is spinning up, a few parameters need to be set.
   - Click on 'Instances' and select the newly created instance
   - Click on the three dots and select 'Manage'
   - Click on 'Networking and add to new entries under 'Firewall'
-    - Custom, TCP, 8383 <-- for Rstudio
+    - Custom, TCP, 8787 <-- for Rstudio
     - Custom, TCP, 3838 <-- for Shiny
     - Click 'save'
     
