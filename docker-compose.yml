@@ -10,7 +10,9 @@ services:
     environment:
       - USER=test
       - PASSWORD=test
-
+    volumes:
+      - "/home/ubuntu/Dropbox:/home/rstudio/Dropbox"
+ 
  shiny:
     restart: always
     image: rocker/shiny
