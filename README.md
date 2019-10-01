@@ -1,6 +1,6 @@
 # Server_setup
 Creating an RStudio/Shiny server using AWS Lightsail and Docker (on MacOS)
-This is heavily inspired by the script to install todo by mikegcoleman
+This is heavily inspired by the script to install todo by mikegcoleman and by [Jordan Farrers manual to install Rstudio](https://jrfarrer.github.io/post/how-to-setup-rstudio-on-amazon-lightsail/)
 
 ## Create a server
 - Create an account with [Amazon Web Services (AWS) Lightsail](https://lightsail.aws.amazon.com)
@@ -32,7 +32,7 @@ While the server is spinning up, a few parameters need to be set.
     - Custom, TCP, 3838 <-- for Shiny
     - Click 'save'
     
-## further setup of the server
+## Setting up a connection
 Now it is time to configure Ubuntu Linux to run Rstudio and Shiny via an SSH session.
 #To set up a local SSH session:
   - note down the IP address of the instance.
@@ -42,7 +42,21 @@ Now it is time to configure Ubuntu Linux to run Rstudio and Shiny via an SSH ses
   - You may see a message asking if the host can be trusted. Say 'yes' to add the server to the known_hosts file.
 Now you should be seeing something like ubuntu@ip-212.141.47.12:~$. Note that the displayed IP adress is the *internal* rather than the 
 
-#installing packages 
+## Further setup of the server 
+As the amount of memory is limited to 512K it is helpful to assign swapspace:
+```
+sudo touch /var/swap.img
+sudo chmod 600 /var/swap.img
+sudo dd if=/dev/zero of=/var/swap.img bs=2048k count=1000
+sudo mkswap /var/swap.img
+sudo swapon /var/swap.img
+```
+
+Is it also a good idea to upgrade the packages on the server:
+`apt-get upgrade`
+You may get the question whether the SSH configuration file should be changed. Say no.
+
+##installing packages 
 
 To increase reproducability of analysis we will use [Docker](https://www.docker.com/) with [Rocker images](https://www.rocker-project.org/images/). This will guaruantee consistency between different installations of R/Rstudio/Shiny and associated packages.
 1) Install Docker
@@ -61,3 +75,5 @@ sudo chmod +x /usr/local/bin/docker-compose
 note that the steps above can also be performed as an installation script during setup of the instance.
 Now create a docker compose file. Call it shinytidyR. UPDATE TO INCLUDE THIS HERE
 
+##Using the packages
+In the browser, navigate to <AWS IP address>:8787. Username = test and password = test. These passwords can be changed in the 
