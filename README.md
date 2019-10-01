@@ -1,6 +1,6 @@
 # Server_setup
 Creating an RStudio/Shiny server using AWS Lightsail and Docker (on MacOS)
-This is heavily inspired by the [script to install todo by mikegcoleman](https://github.com/mikegcoleman/todo/blob/master/lightsail-compose.sh), [Jordan Farrers manual to install Rstudio](https://jrfarrer.github.io/post/how-to-setup-rstudio-on-amazon-lightsail/) and [Mikkels guide to setup Rstudio an Shiny with a shared pakage directory] https://www.r-bloggers.com/setup-encrypted-rstudio-and-shiny-dashboard-solution-in-3-minutes/.
+This is inspired by the [script to install todo by mikegcoleman](https://github.com/mikegcoleman/todo/blob/master/lightsail-compose.sh), and [Mikkels guide to setup Rstudio an Shiny with a shared pakage directory](https://www.r-bloggers.com/setup-encrypted-rstudio-and-shiny-dashboard-solution-in-3-minutes/).
 
 ## Create a server
 - Create an account with [Amazon Web Services (AWS) Lightsail](https://lightsail.aws.amazon.com)
@@ -61,7 +61,7 @@ sudo swapon /var/swap.img
 
 ##installing packages 
 
-To increase reproducability of analysis we will use [Docker](https://www.docker.com/) with [Rocker images](https://www.rocker-project.org/images/) of Rstudio with tidyverse (Rocker/tidyverse) and Shiny with tidyverse installed. This will guaruantee consistency between different installations of R/Rstudio/Shiny and associated packages.
+To increase reproducability of analysis we will use [Docker](https://www.docker.com/) with [Rocker images](https://www.rocker-project.org/images/) of Rstudio with tidyverse (Rocker/tidyverse) and Shiny (Rocker/shiny) installed. This will guaruantee consistency between different installations of R/Rstudio/Shiny and associated packages.
 
 # Install Docker and Docker Compose
   ```bash
@@ -80,21 +80,20 @@ sudo mkdir /srv/docker
 sudo curl -o /srv/docker/docker-compose.yml https://raw.githubusercontent.com/jkeuskamp/Biont_server_setup/master/docker-compose.yml
 ```
 
-#install Rstudio/Tidyverse and Shiny/tidyverse
-```
+#install Rstudio/Tidyverse and Shiny
+```bash
 # copy in systemd unit file and register it so our compose file runs 
 # on system restart
-sudo curl -o /etc/systemd/system/docker-compose-app.service https://raw.githubusercontent.com/Biont_server_setup/master/docker-compose-app.service
+sudo curl -o /etc/systemd/system/docker-compose-app.service https://raw.githubusercontent.com/jkeuskamp/Biont_server_setup/master/docker-compose-app.service
 sudo systemctl enable docker-compose-app
 
 # start up the application via docker-compose
-docker-compose -f /srv/docker/docker-compose.yml up -d
+sudo docker-compose -f /srv/docker/docker-compose.yml up -d
 ```
+This may take a while the first time as the docker containers will to be downloaded
 
 #install (Headless) Dropbox
-```
-#Download Python 2.7 required for the Dropbox script
-sudo apt install python2.7-minimal
+```bash
 #Download and start the deamon
 cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
 ~/.dropbox-dist/dropboxd
@@ -104,13 +103,13 @@ If you are using iterm2 click on <kbd>Shift+Command</kbd> to activate the link a
 The process will continue after you do so. It will run dropbox and sync untill you press <kbd>Control+C</kbd>.
 
 If your dropbox is large, you may be asked to run the following line prior to rerunning the above.
-```
+```bash
 echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf; sudo sysctl -p
 ```
 This will add a line to sysctl.conf allowing dropbox to function well
 
 to install Dropbox CLI enabling controlling dropbox via the command line:
-```
+```bash
 sudo wget -O /usr/local/bin/dropbox "https://www.dropbox.com/download?dl=packages/dropbox.py
 sudo chmod +x /usr/local/bin/dropbox
 ```
@@ -126,6 +125,16 @@ Add specific directories by adding
 `dropbox exclude remove [DIRECTORY] [DIRECTORY]`
 with [DIRECTORY] the directories that you do want to sync eg
 `dropbox exclude remove Biont`
+
+To make dropbox run every reboot:
+```bash
+sudo curl -o /etc/systemd/system/dropbox.service https://raw.githubusercontent.com/jkeuskamp/Biont_server_setup/master/dropbox.service
+sudo systemctl daemon-reload
+sudo systemctl enable dropbox.service
+sudo systemctl start dropbox
+```
+Check whether the service is running by typing
+`sudo systemctl status dropbox`
 
 ##Using the packages
 To use RStudio navigate to <AWS IP address>:8787 using a browser. Username = test and password = test. These passwords can be changed in the docker-compose.yml. To do this, type 'sudo nano /srv/docker/docker-compose.yml and change the lines starting with USER and PASSWORD.
