@@ -1,6 +1,6 @@
 # Server_setup
 Creating an RStudio/Shiny server using AWS Lightsail and Docker (on MacOS)
-This is inspired by the [script to install todo by mikegcoleman](https://github.com/mikegcoleman/todo/blob/master/lightsail-compose.sh), and [Mikkels guide to setup Rstudio an Shiny with a shared package directory](https://www.r-bloggers.com/setup-encrypted-rstudio-and-shiny-dashboard-solution-in-3-minutes/).
+This is inspired by [Jordan Farrers Rstudio installation guide](https://jrfarrer.github.io/post/how-to-setup-rstudio-on-amazon-lightsail/) the [script to install todo by mikegcoleman](https://github.com/mikegcoleman/todo/blob/master/lightsail-compose.sh), and [Mikkels guide to setup Rstudio an Shiny with a shared package directory](https://www.r-bloggers.com/setup-encrypted-rstudio-and-shiny-dashboard-solution-in-3-minutes/).
 
 ## Create a server
 - Create an account with [Amazon Web Services (AWS) Lightsail](https://lightsail.aws.amazon.com)
