@@ -11,7 +11,7 @@ services:
       - USER=test
       - PASSWORD=test
     volumes:
-      - "/home/ubuntu/Dropbox:/home/rstudio/Dropbox"
+      - "/home/ubuntu/Dropbox:/home/rstudio"
  
  shiny:
     restart: always
