@@ -1,6 +1,6 @@
 # Server_setup
 Creating an RStudio/Shiny server using AWS Lightsail and Docker (on MacOS)
-This is heavily inspired by the script to install todo by mikegcoleman and by [Jordan Farrers manual to install Rstudio](https://jrfarrer.github.io/post/how-to-setup-rstudio-on-amazon-lightsail/)
+This is heavily inspired by the [script to install todo by mikegcoleman](https://github.com/mikegcoleman/todo/blob/master/lightsail-compose.sh), [Jordan Farrers manual to install Rstudio](https://jrfarrer.github.io/post/how-to-setup-rstudio-on-amazon-lightsail/) and [Mikkels guide to setup Rstudio an Shiny with a shared pakage directory] https://www.r-bloggers.com/setup-encrypted-rstudio-and-shiny-dashboard-solution-in-3-minutes/.
 
 ## Create a server
 - Create an account with [Amazon Web Services (AWS) Lightsail](https://lightsail.aws.amazon.com)
@@ -59,7 +59,8 @@ You may get the question whether the SSH configuration file should be changed. S
 ##installing packages 
 
 To increase reproducability of analysis we will use [Docker](https://www.docker.com/) with [Rocker images](https://www.rocker-project.org/images/). This will guaruantee consistency between different installations of R/Rstudio/Shiny and associated packages.
-1) Install Docker
+
+# Install Docker and Docker Compose
   ```bash
 curl -fsSL https://get.docker.com -o get-docker.sh
 sh get-docker.sh
@@ -71,9 +72,42 @@ sudo usermod -aG docker ubuntu
 sudo curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
+# copy the dockerfile into /srv/docker 
+# if you change this, change the systemd service file to match
+# WorkingDirectory=[whatever you have below]
+mkdir /srv/docker
+curl -o /srv/docker/docker-compose.yml https://raw.githubusercontent.com/jkeuskamp/Biont_server_setup/master/docker-compose.yml
 ```
-note that the steps above can also be performed as an installation script during setup of the instance.
-Now create a docker compose file. Call it shinytidyR. UPDATE TO INCLUDE THIS HERE
+
+#install Rstudio/Tidyverse and Shiny/tidyverse
+```
+# copy in systemd unit file and register it so our compose file runs 
+# on system restart
+curl -o /etc/systemd/system/docker-compose-app.service https://raw.githubusercontent.com/Biont_server_setup/master/docker-compose-app.service
+systemctl enable docker-compose-app
+
+# start up the application via docker-compose
+docker-compose -f /srv/docker/docker-compose.yml up -d
+```
+
+#install (Headless) Dropbox
+```
+#Download Python 2.7 required for the Dropbox script
+sudo apt install python2.7-minimal
+#Download and start the deamon
+cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+~/.dropbox-dist/dropboxd
+```
+You may see a line asking you to paste a link into your browsr to connect the dropbox to the server.
+The process will continue after you do so
+If your dropbox is large, you may be asked to run the following line prior to rerunning the above
+```
+echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf; sudo sysctl -p
+```
+
+note that the steps above can also be performed as an installation script during setup of the instance. To do so paste the contents of the two blocks above in the 'inital script
 
 ##Using the packages
-In the browser, navigate to <AWS IP address>:8787. Username = test and password = test. These passwords can be changed in the 
+To use RStudio navigate to <AWS IP address>:8787 using a browser. Username = test and password = test. These passwords can be changed in the docker-compose.yml. To do this, type 'sudo nano /srv/docker/docker-compose.yml and change the lines starting with USER and PASSWORD.
+  
+To use Shiny navigate to <AWS IP address>:3838.
