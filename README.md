@@ -16,7 +16,7 @@ This is inspired by the [script to install todo by mikegcoleman](https://github.
 - Name the server (e.g. *Rstudio*)
 - Click *Create Instance*
   
-## initial setup of the server
+### Initial setup of the server
 While the server is spinning up, a few parameters need to be set. 
 1) To make sure that the instance can be reached from outside
   - Click on 'Networking' 
@@ -32,7 +32,7 @@ While the server is spinning up, a few parameters need to be set.
     - Custom, TCP, 3838 <-- for Shiny
     - Click 'save'
     
-## Setting up a connection
+### Setting up a connection
 Now it is time to configure Ubuntu Linux to run Rstudio and Shiny via an SSH session.
 #To set up a local SSH session:
   - note down the IP address of the instance.
@@ -42,10 +42,10 @@ Now it is time to configure Ubuntu Linux to run Rstudio and Shiny via an SSH ses
   - You may see a message asking if the host can be trusted. Say 'yes' to add the server to the known_hosts file.
 Now you should be seeing something like ubuntu@ip-212.141.47.12:~$. Note that the displayed IP adress is the *internal* rather than the 
 
-## Further setup of the server 
+### Further setup of the server 
 It is a good idea to upgrade the packages on the server prior to continuing with installation:
 ```bash
-sudo apt-get upgrade
+sudo apt-get update
 sudo apt-get upgrade
 ```
 When asked about SSH configuration file, choose to 'keep the local version currently installed'. 
@@ -59,11 +59,12 @@ sudo mkswap /var/swap.img
 sudo swapon /var/swap.img
 ```
 
-##installing packages 
+### Installing packages 
 
 To increase reproducability of analysis we will use [Docker](https://www.docker.com/) with [Rocker images](https://www.rocker-project.org/images/) of Rstudio with tidyverse (Rocker/tidyverse) and Shiny (Rocker/shiny) installed. This will guaruantee consistency between different installations of R/Rstudio/Shiny and associated packages.
 
-# Install Docker and Docker Compose
+
+### Install Docker and Docker Compose
   ```bash
 curl -fsSL https://get.docker.com -o get-docker.sh
 sh get-docker.sh
@@ -80,26 +81,14 @@ sudo mkdir /srv/docker
 sudo curl -o /srv/docker/docker-compose.yml https://raw.githubusercontent.com/jkeuskamp/Biont_server_setup/master/docker-compose.yml
 ```
 
-#install Rstudio/Tidyverse and Shiny
-```bash
-# copy in systemd unit file and register it so our compose file runs 
-# on system restart
-sudo curl -o /etc/systemd/system/docker-compose-app.service https://raw.githubusercontent.com/jkeuskamp/Biont_server_setup/master/docker-compose-app.service
-sudo systemctl enable docker-compose-app
-
-# start up the application via docker-compose
-sudo docker-compose -f /srv/docker/docker-compose.yml up -d
-```
-This may take a while the first time as the docker containers will to be downloaded
-
-#install (Headless) Dropbox
+### Install (Headless) Dropbox
 ```bash
 #Download and start the deamon
 cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
 ~/.dropbox-dist/dropboxd
 ```
 You may see a line asking you to visit an URL to connect the dropbox to the server.
-If you are using iterm2 click on <kbd>Shift+Command</kbd> to activate the link and press enter. Otherwise copy the link manually.
+If you are using iterm2 click on <kbd>Command</kbd> to activate the link and press enter. Otherwise copy the link manually.
 The process will continue after you do so. It will run dropbox and sync untill you press <kbd>Control+C</kbd>.
 
 If your dropbox is large, you may be asked to run the following line prior to rerunning the above.
@@ -135,6 +124,18 @@ sudo systemctl start dropbox
 ```
 Check whether the service is running by typing
 `sudo systemctl status dropbox`
+
+### Install Rstudio/Tidyverse and Shiny
+```bash
+# copy in systemd unit file and register it so our compose file runs 
+# on system restart
+sudo curl -o /etc/systemd/system/docker-compose-app.service https://raw.githubusercontent.com/jkeuskamp/Biont_server_setup/master/docker-compose-app.service
+sudo systemctl enable docker-compose-app
+
+# start up the application via docker-compose
+sudo docker-compose -f /srv/docker/docker-compose.yml up -d
+```
+This may take a while the first time as the docker containers will to be downloaded
 
 ##Using the packages
 To use RStudio navigate to <AWS IP address>:8787 using a browser. Username = test and password = test. These passwords can be changed in the docker-compose.yml. To do this, type 'sudo nano /srv/docker/docker-compose.yml and change the lines starting with USER and PASSWORD.
