@@ -5,7 +5,7 @@ services:
     restart: always
     image: rocker/tidyverse
     container_name: rstudio
-    port:
+    ports:
       - "8787:8787"
     environment:
       - USER=test
@@ -15,7 +15,7 @@ services:
     restart: always
     image: rocker/shiny
     container_name: shiny
-    port:
+    ports:
       - "3838:3838"
 
 volumes:
