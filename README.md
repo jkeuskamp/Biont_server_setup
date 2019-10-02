@@ -1,5 +1,5 @@
 # Setup Lightsail Server with Rstudio, Shiny and Dropbox
-*NOTE: DO NOT USE THESE INSTRUCTIONS AS THERE ARE STILL PROBLEMS WITH DROPBOX/RSTUDIO
+
 Creating an RStudio/Shiny server using AWS Lightsail and Docker (on MacOS)
 This is inspired by [Jordan Farrers Rstudio installation guide](https://jrfarrer.github.io/post/how-to-setup-rstudio-on-amazon-lightsail/) the [script to install todo by mikegcoleman](https://github.com/mikegcoleman/todo/blob/master/lightsail-compose.sh), and [Mikkels guide to setup Rstudio an Shiny with a shared package directory](https://www.r-bloggers.com/setup-encrypted-rstudio-and-shiny-dashboard-solution-in-3-minutes/).
 
