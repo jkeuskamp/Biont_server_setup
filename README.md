@@ -9,7 +9,7 @@ This is inspired by [Jordan Farrers Rstudio installation guide](https://jrfarrer
   - Leave the location as-is
   - Under instance image Choose Linux/Unix > OS Only > Ubuntu 18.04 LTS
 - Do not use the Default SSH key, but upload a public key of your own (\*_rsa.pub). To do this, use the SSH Key pair manager. Click on the **+** and upload a public key.
-  - SSH keys are located in ~/.ssh/. One can navigate there from Finder by pressing <kbd>Shift+Command+G</kbd> and typing the directory name (~/.ssh/.)
+  - SSH keys are located in \~/.ssh/. One can navigate there from Finder by pressing <kbd>Shift+Command+G</kbd> and typing the directory name (\~/.ssh/.)
   - Copy your public key to a visible directory that can be accessed by the web-interface
   - Select the appropriate file 
   - Instructions to create a new SSH Key can be found [here](https://help.github.com/en/enterprise/2.16/user/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
